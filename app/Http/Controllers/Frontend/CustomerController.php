@@ -32,7 +32,7 @@ class CustomerController extends Controller
 {
     function __construct()
     {
-        $this->middleware('customer', ['except' => ['register', 'store', 'verify', 'resendotp', 'account_verify', 'login', 'signin', 'logout', 'checkout', 'forgot_password', 'forgot_verify', 'forgot_reset', 'forgot_store', 'forgot_resend', 'order_save', 'order_success', 'order_track', 'order_track_result']]);
+        $this->middleware('customer', ['except' => ['register', 'store', 'verify', 'resendotp', 'account_verify', 'login', 'signin', 'logout', 'checkout', 'forgot_password', 'forgot_verify', 'forgot_reset', 'forgot_store', 'forgot_resend', 'order_save', 'order_success', 'order_track', 'order_track_result', 'storeIncompleteOrder']]);
     }
 
     public function review(Request $request)
@@ -279,6 +279,66 @@ class CustomerController extends Controller
         return view('frontEnd.layouts.customer.checkout', compact('shippingcharge', 'bkash_gateway', 'shurjopay_gateway'));
     }
 
+    public function storeIncompleteOrder(Request $request)
+    {
+        $session_key = Session::getId();
+        $user_id = Auth::guard('customer')->check() ? Auth::guard('customer')->user()->id : null;
+        
+        $cart_content = Cart::instance('shopping')->content();
+        $subtotal = Cart::instance('shopping')->subtotal();
+        $subtotal = str_replace(',', '', $subtotal);
+        $subtotal = str_replace('.00', '', $subtotal);
+        $discount = Session::get('discount', 0);
+        $shipping = Session::get('shipping', 0);
+        $grand_total = $subtotal + $shipping - $discount;
+
+        $order_summary = [
+            'subtotal' => $subtotal,
+            'shipping' => $shipping,
+            'discount' => $discount,
+            'total' => $grand_total
+        ];
+
+        // Basic location info based on IP
+        $ip_address = $request->ip();
+        $location = null;
+        // Simple attempt to get location if possible, otherwise null
+        // Since we are not using a paid package, we'll try a simple lookup if possible or leave it for later enhancement
+        // For now, we just store IP in the table as requested, and a placeholder for location logic
+        
+        // Check if record exists
+        $incompleteOrder = DB::table('incomplete_orders')
+                            ->where('session_key', $session_key)
+                            ->first();
+
+        $data = [
+            'session_key' => $session_key,
+            'user_id' => $user_id,
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'additional_phone' => $request->additional_phone,
+            'address' => $request->address,
+            'area' => $request->area, // Assuming this is area ID
+            'note' => $request->note,
+            'ip_address' => $ip_address,
+            // 'location' => $location, // We will just update if we have it, but for now we rely on IP
+            'cart_content' => json_encode($cart_content),
+            'order_summary' => json_encode($order_summary),
+            'updated_at' => now(),
+        ];
+
+        if ($incompleteOrder) {
+            DB::table('incomplete_orders')
+                ->where('id', $incompleteOrder->id)
+                ->update($data);
+        } else {
+            $data['created_at'] = now();
+            DB::table('incomplete_orders')->insert($data);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
 
     public function order_save(Request $request)
     {
@@ -410,6 +470,11 @@ class CustomerController extends Controller
             $response = curl_exec($ch);
             curl_close($ch);
         }
+
+        // Delete incomplete order after successful order
+        DB::table('incomplete_orders')
+            ->where('session_key', Session::getId())
+            ->delete();
 
         if ($request->payment_method == 'bkash') {
             return redirect('/bkash/checkout-url/create?order_id=' . $order->id);

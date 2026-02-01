@@ -298,6 +298,10 @@
                           data-feather="file-plus"></i>{{$value->name}}</a>
                     </li>
                   @endforeach
+                    <li>
+                      <a href="{{route('admin.order.incomplete')}}"><i
+                          data-feather="file-text"></i>Incomplete Orders</a>
+                    </li>
                 </ul>
               </div>
             </li>

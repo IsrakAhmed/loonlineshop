@@ -109,6 +109,7 @@ Route::group(['prefix'=>'customer','namespace'=>'Frontend', 'middleware' => ['ip
     Route::get('/checkout', [CustomerController::class, 'checkout'])->name('customer.checkout');
     Route::post('/order-save', [CustomerController::class, 'order_save'])->name('customer.ordersave');
     Route::get('/order-success/{id}', [CustomerController::class, 'order_success'])->name('customer.order_success');
+    Route::post('/incomplete-order/store', [CustomerController::class, 'storeIncompleteOrder'])->name('customer.incomplete_order.store');
 
    
     Route::post('/cart/add-ajax', [ShoppingController::class, 'addToCartAjax'])->name('cart.add.ajax');
@@ -425,6 +426,8 @@ Route::group(['namespace'=>'Admin','middleware' => ['auth','lock','check_refer']
     Route::get('order/cart-clear', [OrderController::class,'cart_clear'])->name('admin.order.cart_clear');
 
     // Order route
+    Route::get('order/incomplete', [OrderController::class,'incomplete_orders'])->name('admin.order.incomplete');
+    Route::post('order/incomplete-destroy', [OrderController::class,'destroy_incomplete'])->name('admin.order.incomplete_destroy');
     Route::get('order/{slug}', [OrderController::class,'index'])->name('admin.orders');
     Route::get('order/edit/{invoice_id}', [OrderController::class,'order_edit'])->name('admin.order.edit');
     Route::post('order/update', [OrderController::class,'order_update'])->name('admin.order.update');

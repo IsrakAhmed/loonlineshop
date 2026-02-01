@@ -1,3 +1,5 @@
+
+
 @extends('frontEnd.layouts.master') @section('title', 'Customer Checkout') @push('css')
     <link rel="stylesheet" href="{{ asset('public/frontEnd/css/select2.min.css') }}" />
     <style>
@@ -581,6 +583,53 @@
         });
     </script>
     <script>
+        // Debounce function to limit AJAX calls
+        function debounce(func, wait) {
+            let timeout;
+            return function() {
+                const context = this, args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), wait);
+            };
+        }
+
+        // Function to save incomplete order
+        function saveIncompleteOrder() {
+            let formData = {
+                _token: "{{ csrf_token() }}",
+                name: $('#name').val(),
+                phone: $('#phone').val(),
+                additional_phone: $('#additional_phone').val(),
+                address: $('#address').val(),
+                area: $('#area').val(),
+                note: $('textarea[name="note"]').val() // Include note if it exists
+            };
+
+            $.ajax({
+                url: "{{ route('customer.incomplete_order.store') }}",
+                type: "POST",
+                data: formData,
+                success: function(response) {
+                    // console.log('Incomplete order saved');
+                },
+                error: function(xhr) {
+                    // console.log('Error saving incomplete order');
+                }
+            });
+        }
+
+        // Event listeners for inputs with debounce
+        $('#name, #phone, #additional_phone, #address, textarea[name="note"]').on('input', debounce(function() {
+            saveIncompleteOrder();
+        }, 1000));
+
+
+
+        // Event listeners for change events (selects, radios, etc.)
+        $('#area').on('change', function() {
+            saveIncompleteOrder();
+        });
+
         $("#area").on("change", function () {
             var id = $(this).val();
             $.ajax({
@@ -592,9 +641,11 @@
                 dataType: "html",
                 success: function (response) {
                     $(".cartlist").html(response);
+                    saveIncompleteOrder(); // Save after cart update
                 },
             });
         });
+
         function cart_list() {
             $.ajax({
                 type: "GET",
@@ -602,6 +653,7 @@
                 dataType: "html",
                 success: function (response) {
                     $(".cartlist").html(response);
+                    saveIncompleteOrder(); // Save after cart update
                 },
             });
         }

@@ -630,6 +630,9 @@
                             if (checkout) {
                                 window.location.href = '{{route('customer.checkout')}}';
                             }
+                            if(typeof saveIncompleteOrder === 'function'){
+                                saveIncompleteOrder();
+                            }
                         }
                     },
                 });
@@ -649,6 +652,9 @@
                     success: function (data) {
                         if (data) {
                             toastr.success('Success', 'Product add to cart succfully');
+                            if(typeof saveIncompleteOrder === 'function'){
+                                saveIncompleteOrder();
+                            }
                             return cart_count() + mobile_cart();
                         }
                     },
@@ -666,6 +672,9 @@
                     success: function (data) {
                         if (data) {
                             $(".cartlist").html(data);
+                            if(typeof saveIncompleteOrder === 'function'){
+                                saveIncompleteOrder();
+                            }
                             return cart_count() + mobile_cart() + cart_summary();
                         }
                     },
@@ -683,6 +692,9 @@
                     success: function (data) {
                         if (data) {
                             $(".cartlist").html(data);
+                            if(typeof saveIncompleteOrder === 'function'){
+                                saveIncompleteOrder();
+                            }
                             return cart_count() + mobile_cart();
                         }
                     },
@@ -700,6 +712,9 @@
                     success: function (data) {
                         if (data) {
                             $(".cartlist").html(data);
+                             if(typeof saveIncompleteOrder === 'function'){
+                                saveIncompleteOrder();
+                            }
                             return cart_count() + mobile_cart();
                         }
                     },

@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Models\District;
 use App\Models\OrderStatus;
 use App\Models\Order;
+use Illuminate\Support\Facades\DB;
 use App\Models\OrderDetails;
 use App\Models\Shipping;
 use App\Models\ShippingCharge;
@@ -718,4 +719,17 @@ class OrderController extends Controller
 
 
 
+
+    public function incomplete_orders()
+    {
+        $show_data = DB::table('incomplete_orders')->orderBy('id', 'desc')->paginate(10);
+        return view('backEnd.order.incomplete', compact('show_data'));
+    }
+
+    public function destroy_incomplete(Request $request)
+    {
+        $delete_data = DB::table('incomplete_orders')->where('id', $request->id)->delete();
+        Toastr::success('Success', 'Incomplete order delete success successfully');
+        return redirect()->back();
+    }
 }
