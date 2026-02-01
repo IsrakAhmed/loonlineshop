@@ -141,7 +141,7 @@
         }
 
         .vcart-qty .quantity input {
-            width: 35px;
+            width: 45px;
             border: none;
             border-left: 1px solid #eee;
             border-right: 1px solid #eee;
@@ -149,6 +149,8 @@
             font-weight: 600;
             font-size: 14px;
             background: none;
+            padding: 0;
+            margin-left: 15px;
         }
 
         .cartlist_price {
@@ -335,7 +337,9 @@
             }
 
             .vcart-qty .quantity input {
-                width: 30px;
+                width: 35px;
+                padding: 0;
+                margin-left: 5px;
             }
         }
     </style>
@@ -375,6 +379,78 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="col-sm-7 cust-order-1">
+                    <div class="cart_details table-responsive-sm">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="fa fa-shopping-bag"></i> অর্ডার সামারি
+                                    ({{ Cart::instance('shopping')->count() }})</h5>
+                            </div>
+                            <div class="card-body cartlist">
+                                @foreach (Cart::instance('shopping')->content() as $value)
+                                    <div class="cartlist_item">
+                                        <img src="{{ asset($value->options->image) }}" class="cartlist_img" alt="" />
+                                        <div class="cartlist_info">
+                                            <a
+                                                href="{{ route('product', $value->options->slug) }}">{{ Str::limit($value->name, 40) }}</a>
+                                            <div class="cartlist_qty_wrapper">
+                                                <div class="qty-cart vcart-qty">
+                                                    <div class="quantity">
+                                                        <button class="minus cart_decrement"
+                                                            data-id="{{ $value->rowId }}">-</button>
+                                                        <input type="text" value="{{ $value->qty }}" readonly />
+                                                        <button class="plus cart_increment"
+                                                            data-id="{{ $value->rowId }}">+</button>
+                                                    </div>
+                                                </div>
+                                                <span class="cart_remove_btn cart_remove" data-id="{{ $value->rowId }}"><i
+                                                        class="fas fa-trash"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="cartlist_price">
+                                            ৳ {{ $value->price }}
+                                        </div>
+                                    </div>
+                                @endforeach
+
+                                <table class="summary_table">
+                                    <tr>
+                                        <td>মোট</td>
+                                        <td>৳ <span id="net_total">{{ $subtotal }}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ডেলিভারি চার্জ</td>
+                                        <td>৳ <span id="cart_shipping_cost">{{ $shipping }}</span></td>
+                                    </tr>
+                                    @if(Session::get('discount', 0) > 0)
+                                        <tr>
+                                            <td>কুপন ছাড়</td>
+                                            <td>৳ <span id="discount">{{ Session::get('discount', 0) }}</span></td>
+                                        </tr>
+                                    @endif
+                                    <tr class="total_row">
+                                        <td>সর্বমোট</td>
+                                        <td>৳ <span
+                                                id="grand_total">{{ $subtotal + $shipping - Session::get('discount', 0) }}</span>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <form id="coupon_form" class="mt-3">
+                                    <div class="coupon_wrapper">
+                                        <input type="text" id="coupon_code" class="form-control"
+                                            placeholder="কুপন কোড থাকলে এখানে লিখুন...">
+                                        <button type="button" id="apply_coupon">APPLY</button>
+                                    </div>
+                                    <div id="coupon-message" class="mt-2"></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- col end -->
+
                 <div class="col-sm-5 cus-order-2">
                     <div class="checkout-shipping">
                         <form action="{{ route('customer.ordersave') }}" method="POST" data-parsley-validate="">
@@ -469,21 +545,26 @@
                                                 <div class="form-check p_cash">
                                                     <input class="form-check-input" type="radio" name="payment_method"
                                                         id="inlineRadio1" value="Cash On Delivery" checked required />
-                                                    <label class="form-check-label" for="inlineRadio1"> Cash On Delivery
+                                                    <label class="form-check-label" for="inlineRadio1">
+                                                        <img src="{{ asset('public/frontEnd/images/cod.png') }}" alt="COD" style="height: 30px; margin-right: 8px;"> ক্যাশ অন ডেলিভারি
                                                     </label>
                                                 </div>
                                                 @if($bkash_gateway)
                                                     <div class="form-check p_bkash">
                                                         <input class="form-check-input" type="radio" name="payment_method"
                                                             id="inlineRadio2" value="bkash" required />
-                                                        <label class="form-check-label" for="inlineRadio2"> Bkash </label>
+                                                        <label class="form-check-label" for="inlineRadio2">
+                                                            <img src="{{ asset('public/frontEnd/images/bkash.png') }}" alt="Bkash" style="height: 30px; margin-right: 8px;"> বিকাশ
+                                                        </label>
                                                     </div>
                                                 @endif
                                                 @if($shurjopay_gateway)
                                                     <div class="form-check p_shurjo">
                                                         <input class="form-check-input" type="radio" name="payment_method"
                                                             id="inlineRadio3" value="shurjopay" required />
-                                                        <label class="form-check-label" for="inlineRadio3"> Shurjopay </label>
+                                                        <label class="form-check-label" for="inlineRadio3">
+                                                            <img src="https://shurjopay.com.bd/dev/images/shurjoPay.png" alt="Shurjopay" style="height: 30px; margin-right: 8px;"> সূর্য্যপে
+                                                        </label>
                                                     </div>
                                                 @endif
                                             </div>
@@ -497,76 +578,6 @@
                                 </div>
                             </div>
                         </form>
-                    </div>
-                </div>
-                <!-- col end -->
-                <div class="col-sm-7 cust-order-1">
-                    <div class="cart_details table-responsive-sm">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5><i class="fa fa-shopping-bag"></i> অর্ডার সামারি
-                                    ({{ Cart::instance('shopping')->count() }})</h5>
-                            </div>
-                            <div class="card-body cartlist">
-                                @foreach (Cart::instance('shopping')->content() as $value)
-                                    <div class="cartlist_item">
-                                        <img src="{{ asset($value->options->image) }}" class="cartlist_img" alt="" />
-                                        <div class="cartlist_info">
-                                            <a
-                                                href="{{ route('product', $value->options->slug) }}">{{ Str::limit($value->name, 40) }}</a>
-                                            <div class="cartlist_qty_wrapper">
-                                                <div class="qty-cart vcart-qty">
-                                                    <div class="quantity">
-                                                        <button class="minus cart_decrement"
-                                                            data-id="{{ $value->rowId }}">-</button>
-                                                        <input type="text" value="{{ $value->qty }}" readonly />
-                                                        <button class="plus cart_increment"
-                                                            data-id="{{ $value->rowId }}">+</button>
-                                                    </div>
-                                                </div>
-                                                <span class="cart_remove_btn cart_remove" data-id="{{ $value->rowId }}"><i
-                                                        class="fas fa-trash"></i></span>
-                                            </div>
-                                        </div>
-                                        <div class="cartlist_price">
-                                            ৳ {{ $value->price }}
-                                        </div>
-                                    </div>
-                                @endforeach
-
-                                <table class="summary_table">
-                                    <tr>
-                                        <td>মোট</td>
-                                        <td>৳ <span id="net_total">{{ $subtotal }}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>ডেলিভারি চার্জ</td>
-                                        <td>৳ <span id="cart_shipping_cost">{{ $shipping }}</span></td>
-                                    </tr>
-                                    @if(Session::get('discount', 0) > 0)
-                                        <tr>
-                                            <td>কুপন ছাড়</td>
-                                            <td>৳ <span id="discount">{{ Session::get('discount', 0) }}</span></td>
-                                        </tr>
-                                    @endif
-                                    <tr class="total_row">
-                                        <td>সর্বমোট</td>
-                                        <td>৳ <span
-                                                id="grand_total">{{ $subtotal + $shipping - Session::get('discount', 0) }}</span>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <form id="coupon_form" class="mt-3">
-                                    <div class="coupon_wrapper">
-                                        <input type="text" id="coupon_code" class="form-control"
-                                            placeholder="কুপন কোড থাকলে এখানে লিখুন...">
-                                        <button type="button" id="apply_coupon">APPLY</button>
-                                    </div>
-                                    <div id="coupon-message" class="mt-2"></div>
-                                </form>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <!-- col end -->
