@@ -536,10 +536,26 @@
 
 
     @if(Request::is('/'))
+        <style>
+            @keyframes neon-glow {
+                0%, 100% {
+                    box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--neon-color), 0 0 20px var(--neon-color);
+                    transform: scale(1);
+                }
+                50% {
+                    box-shadow: 0 0 2px #fff, 0 0 5px #fff, 0 0 10px var(--neon-color), 0 0 15px var(--neon-color);
+                    transform: scale(0.95);
+                }
+            }
+            .fixed_contact_icons a {
+                animation: neon-glow 1.5s infinite alternate;
+                border: 2px solid #fff;
+            }
+        </style>
         <div class="fixed_contact_icons">
             <!-- Messenger -->
             @if($contact->messenger)
-                <a href="https://m.me/{{$contact->messenger}}" target="_blank" class="mb-2" style="background: #0084FF;">
+                <a href="https://m.me/{{$contact->messenger}}" target="_blank" class="mb-2" style="background: #0084FF; --neon-color: #0084FF;">
                     <i class="fa-brands fa-facebook-messenger"></i>
                 </a>
             @endif
@@ -547,14 +563,14 @@
             <!-- WhatsApp -->
             @if($contact->whatsapp)
                 <a href="https://api.whatsapp.com/send?phone={{ $contact->whatsapp }}&text=Hello" target="_blank" class="mb-2"
-                    style="background: #25D366;">
+                    style="background: #25D366; --neon-color: #25D366;">
                     <i class="fa-brands fa-whatsapp"></i>
                 </a>
             @endif
 
             <!-- Call -->
             @if($contact->phone)
-                <a href="tel:{{ $contact->phone }}" class="mb-2" style="background: #FF3B30;">
+                <a href="tel:{{ $contact->phone }}" class="mb-2" style="background: #FF3B30; --neon-color: #FF3B30;">
                     <i class="fa-solid fa-phone"></i>
                 </a>
             @endif
