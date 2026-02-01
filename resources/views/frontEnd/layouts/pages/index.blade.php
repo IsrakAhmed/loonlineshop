@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="{{ asset('public/frontEnd/css/owl.theme.default.min.css') }}" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" rel="stylesheet" />
 @endpush @section('content')
-    <section class="slider-section">
+    <section class="slider-section" style="margin-top: 50px !important;">
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
