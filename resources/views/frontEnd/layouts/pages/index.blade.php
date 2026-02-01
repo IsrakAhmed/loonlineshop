@@ -74,15 +74,49 @@
                     </div>
                 </div>
                 <div class="col-sm-12">
+                    <style>
+                        .home_cat_item {
+                            text-align: center;
+                            margin-bottom: 20px;
+                        }
+                        .home_cat_img {
+                            margin-bottom: 10px;
+                            border-radius: 50%;
+                            overflow: hidden;
+                            border: 2px solid #3c7d17;
+                            width: 100px;
+                            height: 100px;
+                            margin: 0 auto;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                        .home_cat_img img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
+                        .home_cat_name a {
+                            color: #333;
+                            font-weight: 600;
+                            font-size: 14px;
+                            text-decoration: none;
+                            display: block;
+                            margin-top: 5px;
+                        }
+                        .home_cat_name a:hover {
+                            color: #3c7d17;
+                        }
+                    </style>
                     <div class="category-slider owl-carousel">
                         @foreach ($menucategories as $key => $value)
-                            <div class="cat_item">
-                                <div class="cat_img">
+                            <div class="home_cat_item">
+                                <div class="home_cat_img">
                                     <a href="{{ route('category', $value->slug) }}">
                                         <img src="{{ asset($value->image) }}" alt="" />
                                     </a>
                                 </div>
-                                <div class="cat_name">
+                                <div class="home_cat_name">
                                     <a href="{{ route('category', $value->slug) }}">
                                         {{ $value->name }}
                                     </a>
