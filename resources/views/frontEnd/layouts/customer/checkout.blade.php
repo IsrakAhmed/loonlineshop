@@ -633,6 +633,54 @@
             </div>
         </div>
     </section>
+
+    <!-- Scroll to Bottom Button -->
+    <a href="javascript:void(0);" class="scroll-down-btn" id="scrollDownBtn">
+        <i class="fa fa-arrow-down"></i>
+    </a>
+
+    <style>
+        .scroll-down-btn {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: #3c7d17;
+            color: #fff !important;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-size: 20px;
+            z-index: 9999;
+            display: none; /* Hidden by default */
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            animation: blink-animation 1.5s infinite;
+        }
+
+        @keyframes blink-animation {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Show only on mobile devices */
+        @media only screen and (max-width: 767px) {
+            .scroll-down-btn {
+                display: block;
+            }
+        }
+    </style>
+
+    <script>
+        document.getElementById('scrollDownBtn').addEventListener('click', function() {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            });
+        });
+    </script>
 @endsection @push('script')
     <script src="{{ asset('public/frontEnd/') }}/js/parsley.min.js"></script>
     <script src="{{ asset('public/frontEnd/') }}/js/form-validation.init.js"></script>
