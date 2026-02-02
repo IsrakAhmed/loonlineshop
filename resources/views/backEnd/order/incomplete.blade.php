@@ -38,8 +38,9 @@
                                                 {{$value->additional_phone}}<br>
                                                 @endif
                                                 {{$value->address}}<br>
+                                                Note: {{ $value->note ? $value->note : 'N/A' }} <br>
                                                 {{$value->area}}<br>
-                                                IP: {{$value->ip_address}}
+                                                IP: {{$value->ip_address}}  
                                             </td>
                                             <td>
                                                 @php

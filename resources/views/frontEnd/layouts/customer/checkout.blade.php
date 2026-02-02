@@ -220,7 +220,8 @@
         .checkout-support-banner {
             background: #fff;
             border-radius: 12px;
-            padding: 20px;
+            padding: 20px; 
+            margin-top: 40px;
             margin-bottom: 25px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             border: 1px solid #f0f0f0;
@@ -275,16 +276,10 @@
 
         @media (max-width: 576px) {
             .chheckout-section {
-                padding: 20px 0;
+                padding: 110px 0 20px 0;
             }
 
-            .cus-order-2 {
-                order: 2;
-            }
 
-            .cust-order-1 {
-                order: 1;
-            }
 
             .checkout-support-banner {
                 padding: 15px 10px;
@@ -337,10 +332,52 @@
             }
 
             .vcart-qty .quantity input {
-                width: 35px;
-                padding: 0;
-                margin-left: 5px;
+                width: 40px !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                margin-left: 15px !important;
+                text-align: center !important;
+                border-left: 1px solid #eee;
+                border-right: 1px solid #eee;
             }
+        }
+        
+        .delivery-notice {
+            background: linear-gradient(to right, #e3f2fd, #bbdefb);
+            border: 1px solid #90caf9;
+            color: #0d47a1;
+            padding: 15px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .delivery-notice:hover {
+            transform: translateY(-2px);
+        }
+
+        .delivery-notice i {
+            font-size: 24px;
+            color: #1976d2;
+            background: #fff;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .delivery-notice p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.4;
         }
     </style>
 @endpush @section('content')
@@ -379,79 +416,8 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-sm-7 cust-order-1">
-                    <div class="cart_details table-responsive-sm">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5><i class="fa fa-shopping-bag"></i> অর্ডার সামারি
-                                    ({{ Cart::instance('shopping')->count() }})</h5>
-                            </div>
-                            <div class="card-body cartlist">
-                                @foreach (Cart::instance('shopping')->content() as $value)
-                                    <div class="cartlist_item">
-                                        <img src="{{ asset($value->options->image) }}" class="cartlist_img" alt="" />
-                                        <div class="cartlist_info">
-                                            <a
-                                                href="{{ route('product', $value->options->slug) }}">{{ Str::limit($value->name, 40) }}</a>
-                                            <div class="cartlist_qty_wrapper">
-                                                <div class="qty-cart vcart-qty">
-                                                    <div class="quantity">
-                                                        <button class="minus cart_decrement"
-                                                            data-id="{{ $value->rowId }}">-</button>
-                                                        <input type="text" value="{{ $value->qty }}" readonly />
-                                                        <button class="plus cart_increment"
-                                                            data-id="{{ $value->rowId }}">+</button>
-                                                    </div>
-                                                </div>
-                                                <span class="cart_remove_btn cart_remove" data-id="{{ $value->rowId }}"><i
-                                                        class="fas fa-trash"></i></span>
-                                            </div>
-                                        </div>
-                                        <div class="cartlist_price">
-                                            ৳ {{ $value->price }}
-                                        </div>
-                                    </div>
-                                @endforeach
 
-                                <table class="summary_table">
-                                    <tr>
-                                        <td>মোট</td>
-                                        <td>৳ <span id="net_total">{{ $subtotal }}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>ডেলিভারি চার্জ</td>
-                                        <td>৳ <span id="cart_shipping_cost">{{ $shipping }}</span></td>
-                                    </tr>
-                                    @if(Session::get('discount', 0) > 0)
-                                        <tr>
-                                            <td>কুপন ছাড়</td>
-                                            <td>৳ <span id="discount">{{ Session::get('discount', 0) }}</span></td>
-                                        </tr>
-                                    @endif
-                                    <tr class="total_row">
-                                        <td>সর্বমোট</td>
-                                        <td>৳ <span
-                                                id="grand_total">{{ $subtotal + $shipping - Session::get('discount', 0) }}</span>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                                <form id="coupon_form" class="mt-3">
-                                    <div class="coupon_wrapper">
-                                        <input type="text" id="coupon_code" class="form-control"
-                                            placeholder="কুপন কোড থাকলে এখানে লিখুন...">
-                                        <button type="button" id="apply_coupon">APPLY</button>
-                                    </div>
-                                    <div id="coupon-message" class="mt-2"></div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- col end -->
-
-                <div class="col-sm-5 cus-order-2">
+                <div class="col-sm-5">
                     <div class="checkout-shipping">
                         <form action="{{ route('customer.ordersave') }}" method="POST" data-parsley-validate="">
                             @csrf
@@ -540,6 +506,18 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label for="note">নোট(ঐচ্ছিক)</label>
+                                                <textarea name="note" id="note" class="form-control" rows="3"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12" style="margin-top: 20px;">
+                                            <div class="delivery-notice">
+                                                <i class="fa fa-truck"></i>
+                                                <p>অর্ডার করার ২-৩ দিনের মধ্যে ডেলিভারি করা হবে।</p> 
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
                                             <div class="payment_method_wrapper">
                                                 <label class="mb-2 d-block font-weight-bold">পেমেন্ট মেথড</label>
                                                 <div class="form-check p_cash">
@@ -581,6 +559,77 @@
                     </div>
                 </div>
                 <!-- col end -->
+                
+                <div class="col-sm-7">
+                    <div class="cart_details table-responsive-sm">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="fa fa-shopping-bag"></i> অর্ডার সামারি
+                                    ({{ Cart::instance('shopping')->count() }})</h5>
+                            </div>
+                            <div class="card-body cartlist">
+                                @foreach (Cart::instance('shopping')->content() as $value)
+                                    <div class="cartlist_item">
+                                        <img src="{{ asset($value->options->image) }}" class="cartlist_img" alt="" />
+                                        <div class="cartlist_info">
+                                            <a
+                                                href="{{ route('product', $value->options->slug) }}">{{ Str::limit($value->name, 40) }}</a>
+                                            <div class="cartlist_qty_wrapper">
+                                                <div class="qty-cart vcart-qty">
+                                                    <div class="quantity">
+                                                        <button class="minus cart_decrement"
+                                                            data-id="{{ $value->rowId }}">-</button>
+                                                        <input type="text" value="{{ $value->qty }}" readonly />
+                                                        <button class="plus cart_increment"
+                                                            data-id="{{ $value->rowId }}">+</button>
+                                                    </div>
+                                                </div>
+                                                <span class="cart_remove_btn cart_remove" data-id="{{ $value->rowId }}"><i
+                                                        class="fas fa-trash"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="cartlist_price">
+                                            ৳ {{ $value->price }}
+                                        </div>
+                                    </div>
+                                @endforeach
+
+                                <table class="summary_table">
+                                    <tr>
+                                        <td>মোট</td>
+                                        <td>৳ <span id="net_total">{{ $subtotal }}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ডেলিভারি চার্জ</td>
+                                        <td>৳ <span id="cart_shipping_cost">{{ $shipping }}</span></td>
+                                    </tr>
+                                    @if(Session::get('discount', 0) > 0)
+                                        <tr>
+                                            <td>কুপন ছাড়</td>
+                                            <td>৳ <span id="discount">{{ Session::get('discount', 0) }}</span></td>
+                                        </tr>
+                                    @endif
+                                    <tr class="total_row">
+                                        <td>সর্বমোট</td>
+                                        <td>৳ <span
+                                                id="grand_total">{{ $subtotal + $shipping - Session::get('discount', 0) }}</span>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <form id="coupon_form" class="mt-3">
+                                    <div class="coupon_wrapper">
+                                        <input type="text" id="coupon_code" class="form-control"
+                                            placeholder="কুপন কোড থাকলে এখানে লিখুন...">
+                                        <button type="button" id="apply_coupon">APPLY</button>
+                                    </div>
+                                    <div id="coupon-message" class="mt-2"></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- col end -->
             </div>
         </div>
     </section>
@@ -612,7 +661,7 @@
                 phone: $('#phone').val(),
                 additional_phone: $('#additional_phone').val(),
                 address: $('#address').val(),
-                area: $('#area').val(),
+                area: $('#area option:selected').text(),
                 note: $('textarea[name="note"]').val() // Include note if it exists
             };
 

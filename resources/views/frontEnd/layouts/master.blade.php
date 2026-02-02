@@ -137,15 +137,6 @@
         <div class="top-header" style="background: #3c7d17; border-bottom: 1px solid #ddd;">
             <div class="container">
                 <div class="row">
-                    <div class="col-auto">
-                        <div class="top_left">
-                            <a href="tel:{{ $contact->hotline }}"
-                                style="background: #fff; color: #002366 !important; line-height: 40px; font-weight: 700; padding: 0 15px; display: inline-block; margin-top: 0px; text-decoration: none;">
-                                <i class="fa-solid fa-phone" style="color: #002366 !important;"></i> <span
-                                    style="color: #002366 !important;">{{ $contact->hotline }}</span>
-                            </a>
-                        </div>
-                    </div>
                     <div class="col">
                         <div class="top_right text-end">
                             <marquee behavior="" direction="" style="color: #fff; line-height: 30px; width: 100%;">
@@ -206,6 +197,8 @@
                                     </form>
                                     <div class="search_result"></div>
                                 </div>
+                                <div class="col-auto">
+                        
                                 <div class="header-list-items">
                                     <ul>
                                         <li class="track_btn">

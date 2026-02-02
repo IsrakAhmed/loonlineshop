@@ -46,6 +46,9 @@ Route::get('/cc', function() {
     return "Cleared!";
 });
 
+
+
+
 Route::get('/controller', function() {
     Artisan::call('make:controller Admin/TagManagerController');
     return "Controller Done!";

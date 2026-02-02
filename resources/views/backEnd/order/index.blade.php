@@ -126,6 +126,7 @@
                                                         <strong>{{ $value->shipping ? $value->shipping->name : '' }}</strong>
                                                         <br>
                                                         Address: {{ $value->shipping ? $value->shipping->address : '' }} <br>
+                                                        Note: {{ $value->note ? $value->note : 'N/A' }} <br>
                                                     </div>
                                                     <div style="width: 48%;">
                                                         Phone: {{ $value->shipping ? $value->shipping->phone : '' }} <br>
