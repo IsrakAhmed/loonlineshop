@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="{{asset('public/backEnd/')}}/assets/css/toastr.min.css" />
 
     <link rel="stylesheet" href="{{asset('public/frontEnd/css/wsit-menu.css')}}" />
-    <link rel="stylesheet" href="{{asset('public/frontEnd/css/style.css')}}" />
+    <link rel="stylesheet" href="{{asset('public/frontEnd/css/style.css?v=1.5')}}" />
     <link rel="stylesheet" href="{{asset('public/frontEnd/css/responsive.css')}}" />
     <link rel="stylesheet" href="{{asset('public/frontEnd/css/main.css')}}" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -197,8 +197,13 @@
                                     </form>
                                     <div class="search_result"></div>
                                 </div>
-                                <div class="col-auto">
-                        
+                                <div class="hotline_number" style="display: flex; align-items: center; justify-content: center; margin-left: 15px;">
+                                    <a href="tel:{{ $contact->hotline }}"
+                                        style="color: #3C7D17 !important; font-weight: 700; text-decoration: none; font-size: 16px;">
+                                        <i class="fa-solid fa-phone" style="color: #3C7D17 !important;"></i>
+                                        {{ $contact->hotline }}
+                                    </a>
+                                </div>
                                 <div class="header-list-items">
                                     <ul>
                                         <li class="track_btn">
@@ -371,8 +376,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
         <!-- main-header end -->
     </header>
     <div id="content">
