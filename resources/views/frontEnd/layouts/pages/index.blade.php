@@ -59,6 +59,17 @@
             </div>
         </div>
     </section>
+    
+    <style>
+        .bottoads_area {
+            padding-bottom: 0px;
+            margin-bottom: 0px;
+        }
+        .homeproduct {
+            padding-top: 0px;
+        }
+    </style>
+
     <section class="homeproduct">
         <div class="container">
             <div class="row">
