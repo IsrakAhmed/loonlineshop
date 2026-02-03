@@ -149,15 +149,22 @@
         </div>
 
         <div class="mobile-header sticky">
-            <div class="mobile-logo">
-                <div class="menu-bar">
+            <div class="mobile-logo" style="display: flex; align-items: center; justify-content: space-between;">
+                <div class="menu-bar" style="margin-right: 5px;">
                     <a class="toggle">
                         <i class="fa-solid fa-bars"></i>
                     </a>
                 </div>
-                <div class="menu-logo">
-                    <a href="{{route('home')}}"><img src="{{asset($generalsetting->white_logo)}}" alt="" /></a>
+                <div class="menu-logo" >
+                    <a href="{{route('home')}}"><img src="{{asset($generalsetting->white_logo)}}" alt="" style="max-height: 40px;" /></a>
                 </div>
+                
+                <div class="mobile-hotline" style="margin-right: 10px;">
+                     <a href="tel:{{ $contact->hotline }}" style="color: #3C7D17; font-weight: 700; font-size: 13px; white-space: nowrap;">
+                        <i class="fa-solid fa-phone"></i> {{ $contact->hotline }}
+                    </a>
+                </div>
+
                 <div class="menu-bag">
                     <p class="margin-shopping">
                         <i class="fa-solid fa-cart-shopping"></i>
