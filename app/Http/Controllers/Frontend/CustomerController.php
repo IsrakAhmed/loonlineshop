@@ -311,6 +311,15 @@ class CustomerController extends Controller
                             ->where('session_key', $session_key)
                             ->first();
 
+        if ($cart_content->count() <= 0) {
+            if ($incompleteOrder) {
+                DB::table('incomplete_orders')
+                    ->where('id', $incompleteOrder->id)
+                    ->delete();
+            }
+            return response()->json(['success' => true, 'message' => 'Cart empty, incomplete order removed']);
+        }
+
         $data = [
             'session_key' => $session_key,
             'user_id' => $user_id,

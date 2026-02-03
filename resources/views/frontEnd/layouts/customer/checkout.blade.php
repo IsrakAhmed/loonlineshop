@@ -701,8 +701,12 @@
             };
         }
 
+        var isSubmitting = false;
+
         // Function to save incomplete order
         function saveIncompleteOrder() {
+            if (isSubmitting) return; // Stop if form is submitting
+
             let formData = {
                 _token: "{{ csrf_token() }}",
                 name: $('#name').val(),
@@ -800,6 +804,11 @@
                     cart_list();
                 }
             });
+        });
+
+        // Set flag when form is submitted
+        $('form[action="{{ route('customer.ordersave') }}"]').on('submit', function() {
+            isSubmitting = true;
         });
     </script>
     <script type="text/javascript">
