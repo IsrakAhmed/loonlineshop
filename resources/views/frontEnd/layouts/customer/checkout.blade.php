@@ -3,9 +3,23 @@
 @extends('frontEnd.layouts.master') @section('title', 'Customer Checkout') @push('css')
     <link rel="stylesheet" href="{{ asset('public/frontEnd/css/select2.min.css') }}" />
     <style>
+        /* Force remove top spacing for checkout page */
+        body,
+        #content,
+        .main-header,
+        .mobile-header,
+        .mobile-top,
+        .menu-area,
+        .logo-area {
+            margin-top: 0 !important;
+            padding-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+
         .chheckout-section {
             background: #f8f9fa;
-            padding: 40px 0;
+            padding: 10px 0 !important;
+            margin-top: 0 !important;
         }
 
         .checkout-shipping .card,
@@ -221,7 +235,7 @@
             background: #fff;
             border-radius: 12px;
             padding: 20px; 
-            margin-top: 40px;
+            margin-top: 10px;
             margin-bottom: 25px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             border: 1px solid #f0f0f0;
@@ -276,10 +290,8 @@
 
         @media (max-width: 576px) {
             .chheckout-section {
-                padding: 110px 0 20px 0;
+                padding: 10px 0 20px 0;
             }
-
-
 
             .checkout-support-banner {
                 padding: 15px 10px;
@@ -340,6 +352,15 @@
                 border-left: 1px solid #eee;
                 border-right: 1px solid #eee;
             }
+        }
+
+        /* Sticky Header Disable */
+        header#navbar_top,
+        .mobile-header,
+        .mobile-header.sticky,
+        .mobile-search {
+            position: relative !important;
+            top: 0 !important;
         }
         
         .delivery-notice {
@@ -487,15 +508,15 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        <div class="col-sm-12">
+                                        <div class="col-sm-12" style="display: none;">
                                             <div class="form-group mb-3">
                                                 <label for="area">ডেলিভারি এরিয়া নিবার্চন করুন *</label>
                                                 <select id="area"
                                                     class="form-control select2 @error('area') is-invalid @enderror"
                                                     name="area" required>
-                                                    <option value="">এরিয়া নির্বাচন করুন...</option>
+                                                    {{-- <option value="">এরিয়া নির্বাচন করুন...</option> --}}
                                                     @foreach ($shippingcharge as $key => $value)
-                                                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                                                        <option value="{{ $value->id }}" @if($loop->first) selected @endif>{{ $value->name }}</option>
                                                     @endforeach
                                                 </select>
                                                 @error('area')

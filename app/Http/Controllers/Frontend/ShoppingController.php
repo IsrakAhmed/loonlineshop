@@ -27,7 +27,12 @@ class ShoppingController extends Controller
              ]]);
 
         // return redirect()->back();
-        return response()->json($cartinfo);
+        // return response()->json($cartinfo); 
+        return response()->json([
+            'status' => true,
+            'success' => 'Product added to cart successfully!',
+            'cart_count' => Cart::instance('shopping')->count()
+        ]);
     } 
 
     public function cart_store(Request $request)

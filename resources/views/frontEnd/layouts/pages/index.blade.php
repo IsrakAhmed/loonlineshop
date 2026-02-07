@@ -73,7 +73,7 @@
     <section class="homeproduct">
         <div class="container">
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-12" style="margin-bottom: -40px;">
                     <div class="sec_title">
                         <h3 class="section-title-header">
                             <div class="timer_inner">
@@ -84,7 +84,7 @@
                         </h3>
                     </div>
                 </div>
-                <div class="col-sm-12">
+                <div class="col-sm-12" style="margin-top: -3px; margin-bottom: -50px;">
                     <style>
                         .home_cat_item {
                             text-align: center;
@@ -191,26 +191,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                @php
-                                    $averageRating = $value->reviews->avg('ratting');
-                                    $filledStars = floor($averageRating);
-                                    $hasHalfStar = $averageRating - $filledStars >= 0.5;
-                                    $emptyStars = 5 - $filledStars - ($hasHalfStar ? 1 : 0);
-                                @endphp
-
-                                <div class="ratting_star">
-                                    @if ($averageRating >= 0 && $averageRating <= 5)
-                                        @for ($i = 0; $i < $filledStars; $i++)
-                                            <i class="fas fa-star"></i>
-                                        @endfor
-                                        @if ($hasHalfStar)
-                                            <i class="fas fa-star-half-alt"></i>
-                                        @endif
-                                        @for ($i = 0; $i < $emptyStars; $i++)
-                                            <i class="far fa-star"></i>
-                                        @endfor
-                                    @endif
-                                </div>
+                               
                                 <div class="pro_price">
                                     <p>
                                         <del>৳ {{ $value->old_price }}</del>
@@ -254,7 +235,7 @@
                     </div>
                 </div>
                 <div class="col-sm-12">
-                    <a href="{{ route('hotdeals') }}" class="view_more_btn" style="float:left">View More</a>
+                    <a href="{{ route('hotdeals') }}" class="view_more_btn" style="float:left; margin-top: -20px;">View More</a>
                 </div>
             </div>
         </div>
@@ -274,7 +255,7 @@
 
 
     @foreach ($homeproducts as $homecat)
-        <section class="homeproduct">
+        <section class="homeproduct" style="margin-bottom: -20px;">
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12">
@@ -318,26 +299,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @php
-                                        $averageRating = $value->reviews->avg('ratting');
-                                        $filledStars = floor($averageRating);
-                                        $hasHalfStar = $averageRating - $filledStars >= 0.5;
-                                        $emptyStars = 5 - $filledStars - ($hasHalfStar ? 1 : 0);
-                                    @endphp
-
-                                    <div class="ratting_star">
-                                        @if ($averageRating >= 0 && $averageRating <= 5)
-                                            @for ($i = 0; $i < $filledStars; $i++)
-                                                <i class="fas fa-star"></i>
-                                            @endfor
-                                            @if ($hasHalfStar)
-                                                <i class="fas fa-star-half-alt"></i>
-                                            @endif
-                                            @for ($i = 0; $i < $emptyStars; $i++)
-                                                <i class="far fa-star"></i>
-                                            @endfor
-                                        @endif
-                                    </div>
+                                
                                     <div class="pro_price">
                                         <p>
                                             <del>৳ {{ $value->old_price }}</del>
@@ -376,7 +338,7 @@
         </section>
     @endforeach
 
-    <section class="footer_top_ads_area">
+    <section class="footer_top_ads_area" style="margin-top: -100px;">
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
@@ -395,11 +357,9 @@
     </section>
 
 @endsection @push('script')
-    <script src="{{ asset('public/frontEnd/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('public/frontEnd/js/jquery.syotimer.min.js') }}"></script>
     <!-- JS before </body> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <!-- JS before </body> -->
 
     <script>
         $(document).ready(function () {
@@ -540,10 +500,41 @@
                     if (response.status) {
                         toastr.success(response.message);
 
-                        // কার্ট কাউন্ট যদি থাকে
+                        // If cart count element exists
                         $('#cart-count').text(response.cart_count);
                     } else {
                         toastr.error(response.message);
+                    }
+                },
+                error: function () {
+                    toastr.error('Something went wrong!');
+                }
+            });
+        });
+
+        // Handler for .addcartbutton (Order Now & Add to Cart)
+        $(document).on('click', '.addcartbutton', function (e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            var qty = 1;
+            var checkout = $(this).data('checkout'); // Get checkout data attribute
+
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "{{ url('add-to-cart') }}/" + id + "/" + qty,
+                dataType: "json",
+                success: function (response) {
+                    if (response.status) {
+                        toastr.success(response.success);
+                        $('#cart-count').text(response.cart_count);
+                        
+                        // Check if it's an "Order Now" button
+                        if (checkout === 'yes') {
+                            window.location.href = "{{ route('customer.checkout') }}";
+                        }
+                    } else {
+                         toastr.error('Something went wrong!');
                     }
                 },
                 error: function () {
